@@ -178,26 +178,33 @@ function initCialloClickEffect() {
         '#a855f7', '#00f2fe', '#f472b6', '#ffd166'
     ];
 
-    window.addEventListener('click', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
+    function spawnCiallo(x, y) {
         const ciallo = document.createElement('span');
         ciallo.className = 'ciallo-bubble';
         ciallo.textContent = 'Ciallo～(∠・ω< )⌒★';
 
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        const randomRotation = (Math.random() - 0.5) * 24; // -12deg to 12deg
+        const randomRotation = (Math.random() - 0.5) * 24;
 
         ciallo.style.setProperty('--ciallo-color', randomColor);
         ciallo.style.setProperty('--ciallo-rot', `${randomRotation}deg`);
-        ciallo.style.left = `${e.clientX}px`;
-        ciallo.style.top = `${e.clientY}px`;
+        ciallo.style.left = `${x}px`;
+        ciallo.style.top = `${y}px`;
 
         document.body.appendChild(ciallo);
 
         setTimeout(() => {
             ciallo.remove();
         }, 1000);
+    }
+
+    let lastTime = 0;
+    document.addEventListener('pointerdown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        const now = Date.now();
+        if (now - lastTime < 40) return;
+        lastTime = now;
+        spawnCiallo(e.clientX, e.clientY);
     });
 }
 
