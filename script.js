@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initCanvasStarfield();
+    initEmailCopy();
 });
 
 /* =========================================================
@@ -101,4 +102,67 @@ function initCanvasStarfield() {
     }
 
     animate();
+}
+
+/* =========================================================
+   邮箱一键复制系统
+   ========================================================= */
+function initEmailCopy() {
+    const emailCard = document.getElementById('email-card');
+    const copyBadgeText = document.querySelector('.copy-badge-text');
+    const emailActionText = document.getElementById('email-action-text');
+
+    if (!emailCard) return;
+
+    emailCard.addEventListener('click', () => {
+        const email = emailCard.getAttribute('data-email') || 'dev@s1on.wtf';
+
+        const onCopied = () => {
+            showToast(`已复制邮箱 ${email} 到剪贴板 ✨`);
+            if (copyBadgeText) copyBadgeText.textContent = "已复制 ✓";
+            if (emailActionText) emailActionText.textContent = "已复制到剪贴板！✨";
+
+            setTimeout(() => {
+                if (copyBadgeText) copyBadgeText.textContent = "一键复制";
+                if (emailActionText) emailActionText.textContent = "点击一键复制邮箱 📋";
+            }, 2500);
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(onCopied).catch(() => {
+                fallbackCopy(email, onCopied);
+            });
+        } else {
+            fallbackCopy(email, onCopied);
+        }
+    });
+}
+
+function fallbackCopy(text, callback) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        if (callback) callback();
+    } catch (e) {
+        showToast(`请手动复制: ${text}`);
+    }
+    document.body.removeChild(textarea);
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toast-text');
+    if (!toast) return;
+    if (toastText) toastText.textContent = msg;
+    toast.classList.add('show');
+
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2400);
 }

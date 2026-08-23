@@ -466,6 +466,10 @@ body {
 .kafan-text { color: var(--brand-kafan); }
 
 /* 5. 电子邮箱 卡片 */
+.bento-email {
+    cursor: pointer;
+}
+
 .bento-email:hover {
     border-color: #38bdf8;
     box-shadow: 0 16px 40px rgba(56, 189, 248, 0.25);
@@ -474,6 +478,74 @@ body {
 .email-glow { background: #38bdf8; }
 .email-icon { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
 .email-text { color: #38bdf8; }
+
+.copy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 20px;
+    font-size: 0.74rem;
+    color: #38bdf8;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.bento-email:hover .copy-badge {
+    background: rgba(56, 189, 248, 0.25);
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.direct-mail-btn {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: var(--transition);
+}
+
+.direct-mail-btn:hover {
+    color: #ffffff;
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+}
+
+/* 悬浮毛玻璃 Toast 弹窗 */
+.toast-popup {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(13, 17, 33, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(56, 189, 248, 0.5);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.3);
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.toast-popup.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
 
 /* =========================================================
    4. 页脚 (Footer)
