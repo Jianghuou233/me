@@ -465,15 +465,15 @@ body {
 .kafan-icon { color: var(--brand-kafan); border-color: rgba(14, 165, 233, 0.3); }
 .kafan-text { color: var(--brand-kafan); }
 
-/* 5. GitHub 卡片 */
-.bento-github:hover {
-    border-color: var(--brand-github);
-    box-shadow: 0 16px 40px rgba(168, 85, 247, 0.25);
+/* 5. 电子邮箱 卡片 */
+.bento-email:hover {
+    border-color: #38bdf8;
+    box-shadow: 0 16px 40px rgba(56, 189, 248, 0.25);
 }
 
-.github-glow { background: var(--brand-github); }
-.github-icon { color: #ffffff; border-color: rgba(168, 85, 247, 0.3); }
-.github-text { color: var(--brand-github); }
+.email-glow { background: #38bdf8; }
+.email-icon { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
+.email-text { color: #38bdf8; }
 
 /* =========================================================
    4. 页脚 (Footer)
