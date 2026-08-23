@@ -1,0 +1,550 @@
+/* =========================================================
+   me.s1on.wtf ✦ 个人主页 · 核心设计样式
+   Bento Grid · 磨砂毛玻璃 · 品牌霓虹光效 · Canvas 动态星空
+   ========================================================= */
+
+:root {
+    --bg-deep: #050711;
+    --card-bg: rgba(13, 17, 33, 0.7);
+    --card-hover-bg: rgba(22, 28, 52, 0.85);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(112, 214, 255, 0.4);
+    
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    
+    --accent-cyan: #70d6ff;
+    --accent-purple: #c084fc;
+    --accent-gold: #fde047;
+    
+    --brand-bili: #fb7299;
+    --brand-music: #ff4757;
+    --brand-kafan: #0ea5e9;
+    --brand-github: #a855f7;
+    
+    --radius-lg: 24px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+    
+    --font-ui: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-cn-serif: 'Noto Serif SC', 'Source Han Serif SC', SimSun, serif;
+    --font-en-title: 'Cinzel', serif;
+    
+    --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    font-family: var(--font-ui);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+}
+
+/* Canvas 星空背景 */
+#starfield-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* 页面主居中容器 */
+.page-container {
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    z-index: 1;
+}
+
+/* 通用毛玻璃卡片 */
+.glass-panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+/* =========================================================
+   1. 头部个人名片 (Profile Header)
+   ========================================================= */
+.profile-header {
+    padding: 36px 32px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    position: relative;
+}
+
+.avatar-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar-glow {
+    position: absolute;
+    inset: -6px;
+    background: radial-gradient(circle, rgba(112, 214, 255, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(8px);
+    animation: pulse-avatar 4s infinite ease-in-out;
+}
+
+.avatar-box {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(112, 214, 255, 0.5);
+    box-shadow: 0 0 20px rgba(112, 214, 255, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.profile-header:hover .avatar-img {
+    transform: scale(1.08);
+}
+
+.profile-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 20px;
+    font-size: 0.76rem;
+    color: #4ade80;
+    width: fit-content;
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background: #4ade80;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #4ade80;
+    animation: blink-dot 2s infinite ease-in-out;
+}
+
+.profile-name {
+    font-family: var(--font-en-title);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 1px;
+    line-height: 1.2;
+}
+
+.profile-subname {
+    font-family: var(--font-ui);
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.profile-bio {
+    font-family: var(--font-cn-serif);
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.6;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.tag-item {
+    font-size: 0.74rem;
+    padding: 3px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--accent-cyan);
+}
+
+/* =========================================================
+   2. 便当盒网格 (Bento Grid)
+   ========================================================= */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+/* 便当盒通用卡片链接 */
+.bento-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    cursor: pointer;
+}
+
+.bento-card:hover {
+    background: var(--card-hover-bg);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+}
+
+/* 通用光晕背景 */
+.card-glow {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.25;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.bento-card:hover .card-glow {
+    opacity: 0.6;
+    transform: scale(1.3);
+}
+
+/* 卡片顶部 */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.brand-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-icon-pill {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.bento-card:hover .brand-icon-pill {
+    transform: scale(1.1) rotate(-4deg);
+}
+
+.card-brand-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.arrow-icon {
+    color: var(--text-dim);
+    transition: var(--transition);
+}
+
+.bento-card:hover .arrow-icon {
+    color: #ffffff;
+    transform: translate(3px, -3px);
+}
+
+/* 卡片内容 */
+.card-content {
+    margin-bottom: 16px;
+}
+
+.card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.card-info {
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    font-family: var(--font-en-title);
+    margin-bottom: 8px;
+}
+
+.card-desc {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* 卡片底部 */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.action-hint {
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.bento-card:hover .action-hint {
+    transform: translateX(4px);
+}
+
+/* =========================================================
+   3. 品牌专属配色与光效
+   ========================================================= */
+
+/* 1. 置顶精选大卡 (Featured Card - 跨越双列) */
+.bento-featured {
+    grid-column: span 2;
+    padding: 30px;
+    border-color: rgba(112, 214, 255, 0.3);
+    background: linear-gradient(135deg, rgba(13, 17, 33, 0.9) 0%, rgba(20, 29, 60, 0.8) 100%);
+}
+
+.bento-featured:hover {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 20px 50px rgba(112, 214, 255, 0.25);
+}
+
+.featured-glow {
+    background: radial-gradient(circle, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+}
+
+.featured-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    background: rgba(112, 214, 255, 0.12);
+    border: 1px solid rgba(112, 214, 255, 0.35);
+    border-radius: 20px;
+    font-size: 0.76rem;
+    color: var(--accent-cyan);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.featured-logo-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.featured-symbol {
+    font-size: 1.5rem;
+    color: var(--accent-cyan);
+    filter: drop-shadow(0 0 10px var(--accent-cyan));
+}
+
+.featured-title {
+    font-family: var(--font-en-title);
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 80%, var(--accent-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+}
+
+.card-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+}
+
+.domain-tag {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--accent-cyan);
+    background: rgba(112, 214, 255, 0.08);
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(112, 214, 255, 0.2);
+}
+
+.visit-btn {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    padding: 6px 16px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(112, 214, 255, 0.3);
+}
+
+/* 2. Bilibili 卡片 */
+.bento-bili:hover {
+    border-color: var(--brand-bili);
+    box-shadow: 0 16px 40px rgba(251, 114, 153, 0.25);
+}
+
+.bili-glow { background: var(--brand-bili); }
+.bili-icon { color: var(--brand-bili); border-color: rgba(251, 114, 153, 0.3); }
+.bili-text { color: var(--brand-bili); }
+
+/* 3. 网易云音乐 卡片 */
+.bento-music:hover {
+    border-color: var(--brand-music);
+    box-shadow: 0 16px 40px rgba(255, 71, 87, 0.25);
+}
+
+.music-glow { background: var(--brand-music); }
+.music-icon { color: var(--brand-music); border-color: rgba(255, 71, 87, 0.3); }
+.music-text { color: var(--brand-music); }
+
+/* 4. 卡饭论坛 卡片 */
+.bento-kafan:hover {
+    border-color: var(--brand-kafan);
+    box-shadow: 0 16px 40px rgba(14, 165, 233, 0.25);
+}
+
+.kafan-glow { background: var(--brand-kafan); }
+.kafan-icon { color: var(--brand-kafan); border-color: rgba(14, 165, 233, 0.3); }
+.kafan-text { color: var(--brand-kafan); }
+
+/* 5. GitHub 卡片 */
+.bento-github:hover {
+    border-color: var(--brand-github);
+    box-shadow: 0 16px 40px rgba(168, 85, 247, 0.25);
+}
+
+.github-glow { background: var(--brand-github); }
+.github-icon { color: #ffffff; border-color: rgba(168, 85, 247, 0.3); }
+.github-text { color: var(--brand-github); }
+
+/* =========================================================
+   4. 页脚 (Footer)
+   ========================================================= */
+.profile-footer {
+    text-align: center;
+    padding: 16px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.footer-copy {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.footer-copy strong {
+    color: var(--accent-cyan);
+}
+
+.footer-sub {
+    font-size: 0.76rem;
+    color: var(--text-dim);
+}
+
+/* =========================================================
+   5. 动画与响应式断点
+   ========================================================= */
+@keyframes pulse-avatar {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.15); opacity: 0.75; }
+}
+
+@keyframes blink-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* 移动端适配 (Mobile Responsive) */
+@media (max-width: 680px) {
+    body {
+        padding: 24px 16px;
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 28px 20px;
+        gap: 18px;
+    }
+    
+    .profile-meta {
+        align-items: center;
+    }
+    
+    .tag-list {
+        justify-content: center;
+    }
+    
+    .bento-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    
+    .bento-featured {
+        grid-column: span 1;
+        padding: 24px 20px;
+    }
+    
+    .featured-title {
+        font-size: 1.7rem;
+    }
+}
