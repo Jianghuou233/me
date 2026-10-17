@@ -1,209 +1,347 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jianghuou233 ✦ 个人主页 · me.s1on.wtf</title>
-    <meta name="description" content="Jianghuou233 (Murasame) 个人全平台导航与聚合主页 · Bilibili、网易云音乐、卡饭论坛、GitHub、s1on.wtf">
-    <meta name="keywords" content="Jianghuou233, Murasame, s1on.wtf, me.s1on.wtf, Bilibili, 网易云音乐, 卡饭论坛, GitHub, ACG, Galgame, eden*">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif+SC:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css?v=20260823_2335">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#05080e">
+  <title>Jianghuou233 (ムラサメ / 村雨) ✦ Night Log · me.s1on.wtf</title>
+  <meta name="description" content="Jianghuou233（Murasame / 村雨）的个人观测站：B 站、网易云、卡饭与 GitHub 的星图，以及主星 s1on.wtf —— 《eden*》诗音纪念站。">
+  <meta name="author" content="Jianghuou233">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="me.s1on.wtf">
+  <meta property="og:title" content="Jianghuou233 ✦ Night Log">
+  <meta property="og:description" content="一颗熄灭的星星旁边，留着一盏灯。">
+  <meta property="og:image" content="https://me.s1on.wtf/images/avatar.webp">
+  <meta property="og:url" content="https://me.s1on.wtf">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.92em' font-size='86' fill='%23e7c593'>✦</text></svg>">
+  <link rel="preload" href="images/avatar.webp" as="image">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.add("js");</script>
+  <noscript>
+    <style>
+      #preloader { display: none !important; }
+      body { overflow: auto !important; }
+      .sky__layer--deep { opacity: 1 !important; }
+    </style>
+  </noscript>
 </head>
-<body>
-    <!-- Canvas 动态粒子星空 -->
-    <canvas id="starfield-canvas"></canvas>
+<body class="is-loading">
+  <a class="skip-link" href="#main">跳到主要内容</a>
 
-    <div class="page-container">
-        <!-- 头部个人名片 (Profile Card) -->
-        <header class="profile-header glass-panel">
-            <div class="avatar-wrapper">
-                <div class="avatar-glow"></div>
-                <div class="avatar-box">
-                    <img src="images/sion_avatar.webp?v=20260823_2215" alt="Jianghuou233 Avatar" class="avatar-img">
-                </div>
-            </div>
+  <!-- ── atmosphere ───────────────────────────────────────────── -->
+  <div class="sky" aria-hidden="true">
+    <span class="sky__layer sky__layer--deep"></span>
+    <span class="sky__layer sky__layer--dusk"></span>
+    <span class="sky__layer sky__layer--night"></span>
+    <span class="sky__layer sky__layer--ember"></span>
+    <span class="sky__layer sky__layer--dawn"></span>
+  </div>
+  <canvas class="starfield" id="starfield" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" id="cursor" aria-hidden="true"><span></span></div>
 
-            <div class="profile-meta">
-                <div class="status-pill">
-                    <span class="status-dot"></span>
-                    <span>漫游星空中 · Online</span>
-                </div>
-                
-                <h1 class="profile-name">
-                    Jianghuou233
-                    <span class="profile-subname">/ Murasame</span>
-                </h1>
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <span class="preloader__mark">✦</span>
+    <p class="preloader__label">CALIBRATING THE SKY</p>
+    <div class="preloader__bar"><span id="loader-bar"></span></div>
+    <p class="preloader__pct"><span id="loader-pct">0</span><em>%</em></p>
+  </div>
 
-                <p class="profile-bio">
-                    「名为『地球』的星球上最后的恋爱物语 —— 愿你在繁星之海永远自由。」
-                </p>
+  <!-- ── chrome ───────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <a class="brand" href="#top" aria-label="回到顶部">
+      <span class="brand__mark" aria-hidden="true">✦</span>
+      <span class="brand__text">Jianghuou233<em>Night Log</em></span>
+    </a>
 
-                <div class="tag-list">
-                    <span class="tag-item">✦ ACG & Galgame</span>
-                    <span class="tag-item">✦ minori & eden*</span>
-                    <span class="tag-item">✦ Geek & Security</span>
-                </div>
-            </div>
-        </header>
+    <nav class="site-nav" aria-label="章节导航">
+      <a href="#about" data-nav="about"><i>01</i>信号</a>
+      <a href="#constellations" data-nav="constellations"><i>02</i>星图</a>
+      <a href="#primary" data-nav="primary"><i>03</i>主星</a>
+      <a href="#contact" data-nav="contact"><i>04</i>回信</a>
+    </nav>
 
-        <!-- 核心平台便当盒导航网格 (Bento Grid) -->
-        <main class="bento-grid">
-            <!-- 1. 置顶精选项目：s1on.wtf 诗音纪念站 (Full-width Masterpiece Card) -->
-            <a href="https://s1on.wtf" target="_blank" rel="noopener noreferrer" class="bento-card bento-featured glass-panel" title="点击访问诗音专属纪念站">
-                <div class="card-glow featured-glow"></div>
-                <div class="card-header">
-                    <div class="card-badge featured-badge">
-                        <span class="badge-star">✦</span>
-                        <span>FEATURED PROJECT · 置顶精选</span>
-                    </div>
-                    <div class="arrow-icon">
-                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M16.004 9.414l-8.607 8.607-1.414-1.414L14.589 8H7.004V6h11v11h-2V9.414z"/></svg>
-                    </div>
-                </div>
-
-                <div class="card-content">
-                    <div class="featured-logo-box">
-                        <span class="featured-symbol">✦</span>
-                        <h2 class="featured-title">s1on.wtf</h2>
-                    </div>
-                    <p class="card-subtitle">Sion (シオン / 诗音) ✦ 《eden*》专属纪念站</p>
-                    <p class="card-desc">
-                        收录官方全套 37 首天門原声配乐播放器、19 张回忆 CG 画廊与剧情回响。
-                    </p>
-                </div>
-
-                <div class="card-footer">
-                    <span class="domain-tag">https://s1on.wtf</span>
-                    <span class="visit-btn">立即前往 ➔</span>
-                </div>
-            </a>
-
-            <!-- 2. Bilibili 哔哩哔哩 -->
-            <a href="https://space.bilibili.com/2074141652" target="_blank" rel="noopener noreferrer" class="bento-card bento-bili glass-panel" title="点击访问 B 站个人空间">
-                <div class="card-glow bili-glow"></div>
-                <div class="card-header">
-                    <div class="brand-box">
-                        <div class="brand-icon-pill bili-icon">
-                            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M17.813 4.653h.854c1.51 0 2.733 1.224 2.733 2.734v9.226c0 1.51-1.223 2.734-2.733 2.734H5.333c-1.51 0-2.733-1.224-2.733-2.734V7.387c0-1.51 1.223-2.734 2.733-2.734h.854l-1.39-1.39a.75.75 0 0 1 1.06-1.06l2.45 2.45h7.386l2.45-2.45a.75.75 0 0 1 1.06 1.06l-1.39 1.39zm-12.48 2.08a.653.653 0 0 0-.653.654v9.226c0 .36.293.654.653.654h13.334a.653.653 0 0 0 .653-.654V7.387a.653.653 0 0 0-.653-.654H5.333zm3.334 3.334a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666zm6.666 0a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666z"/></svg>
-                        </div>
-                        <span class="card-brand-name">哔哩哔哩</span>
-                    </div>
-                    <div class="arrow-icon">
-                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M16.004 9.414l-8.607 8.607-1.414-1.414L14.589 8H7.004V6h11v11h-2V9.414z"/></svg>
-                    </div>
-                </div>
-
-                <div class="card-content">
-                    <h3 class="card-title">@Jianghuou233</h3>
-                    <p class="card-info">UID: 2074141652</p>
-                    <p class="card-desc">关注我的 B 站主页，查看视频动态与日常投递。</p>
-                </div>
-
-                <div class="card-footer">
-                    <span class="action-hint bili-text">进入 B 站空间 ➔</span>
-                </div>
-            </a>
-
-            <!-- 3. 网易云音乐 (NetEase Cloud Music) -->
-            <a href="https://music.163.com/#/user/home?id=7817399428" target="_blank" rel="noopener noreferrer" class="bento-card bento-music glass-panel" title="点击访问网易云音乐主页">
-                <div class="card-glow music-glow"></div>
-                <div class="card-header">
-                    <div class="brand-box">
-                        <div class="brand-icon-pill music-icon">
-                            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/></svg>
-                        </div>
-                        <span class="card-brand-name">网易云音乐</span>
-                    </div>
-                    <div class="arrow-icon">
-                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M16.004 9.414l-8.607 8.607-1.414-1.414L14.589 8H7.004V6h11v11h-2V9.414z"/></svg>
-                    </div>
-                </div>
-
-                <div class="card-content">
-                    <h3 class="card-title">@Murasame2333</h3>
-                    <p class="card-info">ID: 7817399428</p>
-                    <p class="card-desc">ACG 原声、Galgame 配乐与常听音乐歌单分享。</p>
-                </div>
-
-                <div class="card-footer">
-                    <span class="action-hint music-text">聆听云村歌单 ➔</span>
-                </div>
-            </a>
-
-            <!-- 4. 卡饭论坛 (Kafan Security Forum) -->
-            <a href="https://bbs.kafan.cn/space-uid-1327373.html" target="_blank" rel="noopener noreferrer" class="bento-card bento-kafan glass-panel" title="点击访问卡饭个人空间">
-                <div class="card-glow kafan-glow"></div>
-                <div class="card-header">
-                    <div class="brand-box">
-                        <div class="brand-icon-pill kafan-icon">
-                            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-                        </div>
-                        <span class="card-brand-name">卡饭论坛</span>
-                    </div>
-                    <div class="arrow-icon">
-                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M16.004 9.414l-8.607 8.607-1.414-1.414L14.589 8H7.004V6h11v11h-2V9.414z"/></svg>
-                    </div>
-                </div>
-
-                <div class="card-content">
-                    <h3 class="card-title">@Jianghuou233</h3>
-                    <p class="card-info">UID: 1327373 · 互助分享</p>
-                    <p class="card-desc">安全技术讨论、系统折腾与软件交流社区。</p>
-                </div>
-
-                <div class="card-footer">
-                    <span class="action-hint kafan-text">进入卡饭空间 ➔</span>
-                </div>
-            </a>
-
-            <!-- 5. 电子邮箱联系 (Email - 支持一键复制与直接发信) -->
-            <div class="bento-card bento-email glass-panel" id="email-card" data-email="dev@s1on.wtf" title="点击一键复制邮箱地址">
-                <div class="card-glow email-glow"></div>
-                <div class="card-header">
-                    <div class="brand-box">
-                        <div class="brand-icon-pill email-icon">
-                            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm17 4.238l-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></svg>
-                        </div>
-                        <span class="card-brand-name">电子邮箱</span>
-                    </div>
-                    <div class="copy-badge" id="copy-badge">
-                        <svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h3zm2 0h8a1 1 0 0 1 1 1v8h2V4H9v2zm-4 3v11h10V9H5z"/></svg>
-                        <span class="copy-badge-text">一键复制</span>
-                    </div>
-                </div>
-
-                <div class="card-content">
-                    <h3 class="card-title email-address">dev@s1on.wtf</h3>
-                    <p class="card-info">Contact & Feedback</p>
-                    <p class="card-desc">交流探讨、友链交换或技术交流，欢迎来信沟通。</p>
-                </div>
-
-                <div class="card-footer email-footer">
-                    <span class="action-hint email-text" id="email-action-text">点击一键复制邮箱 📋</span>
-                    <a href="mailto:dev@s1on.wtf" class="direct-mail-btn" title="调起邮件客户端发送" onclick="event.stopPropagation();">直接发信 ➔</a>
-                </div>
-            </div>
-        </main>
-
-        <!-- 页脚 (Footer) -->
-        <footer class="profile-footer">
-            <p class="footer-copy">✦ <strong>me.s1on.wtf</strong> · Jianghuou233 个人聚合主页</p>
-            <p class="footer-sub">Hosted with 💖 on GitHub Pages & Cloudflare</p>
-        </footer>
+    <div class="header-status">
+      <span class="header-status__dot" aria-hidden="true"></span>
+      <span class="header-status__label">CST</span>
+      <span class="header-status__clock" id="clock">--:--:--</span>
     </div>
 
-    <!-- 复制成功的悬浮 Toast 提示 -->
-    <div id="toast" class="toast-popup">
-        <span class="toast-icon">✨</span>
-        <span id="toast-text">已复制邮箱 dev@s1on.wtf 到剪贴板</span>
-    </div>
+    <div class="scroll-progress" aria-hidden="true"><span id="progress"></span></div>
+  </header>
 
-    <script src="script.js?v=20260823_2335"></script>
+  <main id="main" tabindex="-1">
+
+    <!-- ── 00 / hero ──────────────────────────────────────────── -->
+    <section class="hero" id="top" data-section data-phase="deep">
+      <div class="hero__grid">
+        <p class="hero__eyebrow" data-reveal="fade">
+          <span class="rule" aria-hidden="true"></span>
+          A SMALL LIGHTHOUSE AT THE EDGE OF THE SKY
+        </p>
+
+        <h1 class="hero__name">
+          <span class="hero__name-main" data-reveal="rise">Jianghuou233</span>
+          <span class="hero__name-alias" data-reveal="fade" lang="ja">ムラサメ ／ 村雨</span>
+        </h1>
+
+        <p class="hero__line" data-reveal="fade">
+          替一颗熄灭的星星，<br>
+          <em>留着一盏灯。</em>
+        </p>
+
+        <ul class="hero__tags" data-reveal="fade" aria-label="兴趣标签">
+          <li>ACG &amp; Galgame</li>
+          <li>minori &amp; eden*</li>
+          <li>Geek &amp; Security</li>
+        </ul>
+
+        <dl class="hero__proof" data-reveal="fade">
+          <div><dt>OBSERVER</dt><dd>Jianghuou233</dd></div>
+          <div><dt>STATION</dt><dd>me.s1on.wtf</dd></div>
+          <div><dt>STATUS</dt><dd><span class="live-dot" aria-hidden="true"></span>漫游星空中</dd></div>
+        </dl>
+
+        <figure class="hero__portrait" data-parallax="0.06">
+          <span class="portrait__ring portrait__ring--outer" aria-hidden="true"></span>
+          <span class="portrait__ring portrait__ring--inner" aria-hidden="true"></span>
+          <span class="portrait__orbit" aria-hidden="true"><i></i></span>
+          <div class="portrait__lens">
+            <img src="images/avatar.webp" width="640" height="640" alt="站点主人的头像：星海下回望的银发少女" decoding="async">
+            <span class="portrait__scan" aria-hidden="true"></span>
+          </div>
+          <figcaption class="portrait__caption">
+            <span>OBSERVER</span><span>NO. 233</span>
+          </figcaption>
+        </figure>
+
+        <div class="hero__scroll" aria-hidden="true">
+          <span>SCROLL TO DESCEND</span>
+          <i class="hero__scroll-line"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 01 / about ─────────────────────────────────────────── -->
+    <section class="chapter" id="about" data-section data-phase="dusk" aria-labelledby="about-title">
+      <header class="chapter__head">
+        <span class="chapter__index" aria-hidden="true" data-parallax="0.12">01</span>
+        <div class="chapter__titles">
+          <p class="chapter__kicker" data-reveal="fade">ABOUT THE SIGNAL</p>
+          <h2 class="chapter__title" id="about-title" data-reveal="rise">关于这个信号</h2>
+        </div>
+        <p class="chapter__aside" lang="ja" data-reveal="fade">ここから、わたしの星図。</p>
+      </header>
+
+      <div class="about">
+        <blockquote class="about__quote" data-reveal="fade">
+          <p>「名为『地球』的星球上<br><strong>最后的恋爱物语</strong> ——<br>愿你在繁星之海永远自由。」</p>
+          <cite>— eden* / minori, 2009</cite>
+        </blockquote>
+
+        <div class="about__text">
+          <p data-reveal="fade">
+            我在这颗星球上做两件事：把喜欢过的东西整理好，再把它们放在能被找到的地方。
+            <b>s1on.wtf</b> 是最大的一件；这个页面是它的门厅。
+          </p>
+          <p data-reveal="fade">
+            喜欢 ACG 与 Galgame，尤其是 minori 那一代人写下的、关于失去与夏天的故事；
+            也喜欢折腾系统、读安全公告、在论坛里和人从驱动聊到深夜。
+            前者负责记住，后者负责让这些东西继续跑下去。
+          </p>
+
+          <dl class="about__data" data-reveal="fade">
+            <div><dt>ORIGIN</dt><dd>地球 · 某处</dd></div>
+            <div><dt>STATION</dt><dd>me.s1on.wtf</dd></div>
+            <div><dt>SIGNAL</dt><dd>稳定，偶尔延迟</dd></div>
+            <div><dt>LANG</dt><dd>中文 / 日本語 / English</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 02 / constellations ────────────────────────────────── -->
+    <section class="chapter chapter--map" id="constellations" data-section data-phase="night" aria-labelledby="map-title">
+      <header class="chapter__head">
+        <span class="chapter__index" aria-hidden="true" data-parallax="0.12">02</span>
+        <div class="chapter__titles">
+          <p class="chapter__kicker" data-reveal="fade">CONSTELLATIONS</p>
+          <h2 class="chapter__title" id="map-title" data-reveal="rise">散落的星图</h2>
+        </div>
+        <p class="chapter__aside" lang="ja" data-reveal="fade">四つの星が、ひとつの名前を指している。</p>
+      </header>
+
+      <p class="map__intro" data-reveal="fade">
+        同一个人，散落在不同的轨道上。选择离你最近的那一颗。
+      </p>
+
+      <div class="sky-map" data-map>
+        <svg class="sky-map__lines" viewBox="0 0 1000 800" preserveAspectRatio="none" aria-hidden="true">
+          <path class="map-path" d="" data-map-path></path>
+        </svg>
+
+        <ul class="stars">
+          <li class="star star--a" data-reveal="fade">
+            <a class="star__card" href="https://space.bilibili.com/2074141652" target="_blank" rel="noopener noreferrer">
+              <span class="star__top">
+                <span class="star__id">A–01</span>
+                <span class="star__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.8 4.7h.9c1.5 0 2.7 1.2 2.7 2.7v9.2c0 1.5-1.2 2.7-2.7 2.7H5.3c-1.5 0-2.7-1.2-2.7-2.7V7.4c0-1.5 1.2-2.7 2.7-2.7h.9L4.8 3.3a.8.8 0 0 1 1.1-1.1l2.4 2.5h7.4l2.4-2.5a.8.8 0 0 1 1.1 1.1l-1.4 1.4ZM5.3 6.1a.7.7 0 0 0-.7.7v9.2c0 .4.3.7.7.7h13.4c.4 0 .7-.3.7-.7V6.8a.7.7 0 0 0-.7-.7H5.3Zm3.3 3.3a1.3 1.3 0 1 1 0 2.7 1.3 1.3 0 0 1 0-2.7Zm6.7 0a1.3 1.3 0 1 1 0 2.7 1.3 1.3 0 0 1 0-2.7Z"/></svg>
+                </span>
+              </span>
+              <h3 class="star__name">哔哩哔哩</h3>
+              <p class="star__handle">@Jianghuou233</p>
+              <p class="star__desc">视频、动态，以及偶尔的深夜投递。</p>
+              <span class="star__foot"><span class="star__meta">UID 2074141652</span><span class="star__go">进入空间 ↗</span></span>
+            </a>
+          </li>
+
+          <li class="star star--b" data-reveal="fade">
+            <a class="star__card" href="https://music.163.com/#/user/home?id=7817399428" target="_blank" rel="noopener noreferrer">
+              <span class="star__top">
+                <span class="star__id">B–07</span>
+                <span class="star__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 15.6a5.6 5.6 0 1 1 0-11.2 5.6 5.6 0 0 1 0 11.2Zm0-8.2a2.6 2.6 0 1 0 0 5.2 2.6 2.6 0 0 0 0-5.2Z"/></svg>
+                </span>
+              </span>
+              <h3 class="star__name">网易云音乐</h3>
+              <p class="star__handle">@Murasame2333</p>
+              <p class="star__desc">ACG 原声与 Galgame 配乐，听得最久的那一类。</p>
+              <span class="star__foot"><span class="star__meta">ID 7817399428</span><span class="star__go">聆听歌单 ↗</span></span>
+            </a>
+          </li>
+
+          <li class="star star--c" data-reveal="fade">
+            <a class="star__card" href="https://bbs.kafan.cn/space-uid-1327373.html" target="_blank" rel="noopener noreferrer">
+              <span class="star__top">
+                <span class="star__id">C–13</span>
+                <span class="star__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1 3 5v6c0 5.6 3.8 10.7 9 12 5.2-1.3 9-6.4 9-12V5l-9-4Zm0 11h7c-.5 4.1-3.3 7.8-7 8.9V12H5V6.3l7-3.1v8.8Z"/></svg>
+                </span>
+              </span>
+              <h3 class="star__name">卡饭论坛</h3>
+              <p class="star__handle">@Jianghuou233</p>
+              <p class="star__desc">安全、系统与软件的老地方，折腾从这里开始。</p>
+              <span class="star__foot"><span class="star__meta">UID 1327373</span><span class="star__go">进入空间 ↗</span></span>
+            </a>
+          </li>
+
+          <li class="star star--d" data-reveal="fade">
+            <a class="star__card" href="https://github.com/Jianghuou233" target="_blank" rel="noopener noreferrer">
+              <span class="star__top">
+                <span class="star__id">D–31</span>
+                <span class="star__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.7.4-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-4.9 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.8-2.4 4.7-4.6 4.9.4.3.7 1 .7 2v2.9c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>
+                </span>
+              </span>
+              <h3 class="star__name">GitHub</h3>
+              <p class="star__handle">@Jianghuou233</p>
+              <p class="star__desc">代码、站点，以及这个页面本身。</p>
+              <span class="star__foot"><span class="star__meta">main · 持续提交</span><span class="star__go">查看仓库 ↗</span></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── 03 / primary star ──────────────────────────────────── -->
+    <section class="chapter chapter--primary" id="primary" data-section data-phase="ember" aria-labelledby="primary-title">
+      <header class="chapter__head">
+        <span class="chapter__index" aria-hidden="true" data-parallax="0.12">03</span>
+        <div class="chapter__titles">
+          <p class="chapter__kicker" data-reveal="fade">THE PRIMARY STAR</p>
+          <h2 class="chapter__title" id="primary-title" data-reveal="rise">主星</h2>
+        </div>
+        <p class="chapter__aside" lang="ja" data-reveal="fade">いちばん明るい星は、もう眠っている。</p>
+      </header>
+
+      <div class="primary">
+        <a class="primary__link" href="https://s1on.wtf" target="_blank" rel="noopener noreferrer" aria-label="打开 s1on.wtf 诗音纪念站">
+          <span class="primary__kicker">FEATURED PROJECT</span>
+          <span class="primary__word" data-reveal="rise">s1on<em>.wtf</em></span>
+          <span class="primary__arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <p class="primary__lede" data-reveal="fade">
+          《eden*》诗音纪念站 —— 一个可以亲手推进的黄昏。<br>
+          37 首天門原声，19 张回忆 CG，34 句终幕对白，和一片不会熄灭的星野。
+        </p>
+
+        <dl class="primary__stats" data-reveal="fade">
+          <div><dt>TRACKS</dt><dd data-count="37">37</dd></div>
+          <div><dt>CGS</dt><dd data-count="19">19</dd></div>
+          <div><dt>LINES</dt><dd data-count="34">34</dd></div>
+          <div><dt>ENDINGS</dt><dd>∞</dd></div>
+        </dl>
+
+        <div class="primary__actions" data-reveal="fade">
+          <a class="button" href="https://s1on.wtf" target="_blank" rel="noopener noreferrer">
+            进入纪念站
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 9.4 7.4 18l-1.4-1.4L14.6 8H7V6h11v11h-2V9.4Z"/></svg>
+          </a>
+          <span class="primary__note">建议戴上耳机，把音量调小一点。</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 04 / contact ───────────────────────────────────────── -->
+    <section class="chapter chapter--contact" id="contact" data-section data-phase="dawn" aria-labelledby="contact-title">
+      <header class="chapter__head">
+        <span class="chapter__index" aria-hidden="true" data-parallax="0.12">04</span>
+        <div class="chapter__titles">
+          <p class="chapter__kicker" data-reveal="fade">RETURN SIGNAL</p>
+          <h2 class="chapter__title" id="contact-title" data-reveal="rise">回信</h2>
+        </div>
+        <p class="chapter__aside" lang="ja" data-reveal="fade">まだ、灯りは消していない。</p>
+      </header>
+
+      <div class="contact">
+        <p class="contact__line" data-reveal="rise">
+          如果这里有一颗星星，<br>
+          曾经替你亮过<em>一小会儿</em>。
+        </p>
+
+        <div class="contact__card" data-reveal="fade">
+          <p class="contact__label">RETURN ADDRESS / 回信地址</p>
+          <p class="contact__mail">dev@s1on.wtf</p>
+          <div class="contact__actions">
+            <button class="button" type="button" data-copy-email="dev@s1on.wtf">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h3Zm2 0h8a1 1 0 0 1 1 1v8h2V4H9v2Zm-4 3v11h10V9H5Z"/></svg>
+              <span data-copy-label>复制地址</span>
+            </button>
+            <a class="button button--line" href="mailto:dev@s1on.wtf">
+              直接发信
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 9.4 7.4 18l-1.4-1.4L14.6 8H7V6h11v11h-2V9.4Z"/></svg>
+            </a>
+          </div>
+          <p class="contact__note">友链、技术、旧作，或者只是想聊一句 eden*，都欢迎。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── footer ───────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p class="site-footer__mark" aria-hidden="true">✦</p>
+      <p class="site-footer__domain">me.s1on.wtf</p>
+      <p class="site-footer__meta">Jianghuou233 / Murasame · 手写 HTML · GitHub Pages &amp; Cloudflare</p>
+      <p class="site-footer__hint">随便点一下 —— 试着点亮一颗星。</p>
+      <p class="site-footer__quote">没有奇迹了，但有星。</p>
+      <nav class="site-footer__nav" aria-label="页脚导航">
+        <a href="https://s1on.wtf" target="_blank" rel="noopener noreferrer">s1on.wtf</a>
+        <a href="https://github.com/Jianghuou233" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="mailto:dev@s1on.wtf">Email</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
