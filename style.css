@@ -714,17 +714,6 @@ main {
   color: var(--ink);
 }
 
-.hero__name-alias {
-  display: block;
-  margin-top: clamp(14px, 2vh, 22px);
-  padding-left: 0.35em;
-  font-family: var(--font-jp);
-  font-size: clamp(0.62rem, 0.95vw, 0.8rem);
-  font-weight: 300;
-  letter-spacing: 0.42em;
-  color: var(--gold);
-}
-
 .hero__line {
   grid-column: 1 / 7;
   grid-row: 3;
@@ -1832,10 +1821,6 @@ main {
 
   .hero__eyebrow .rule {
     width: 18px;
-  }
-
-  .hero__name-alias {
-    letter-spacing: 0.3em;
   }
 
   .primary__word {
